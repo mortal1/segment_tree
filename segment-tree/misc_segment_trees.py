@@ -89,21 +89,6 @@ class SetSumSegmentTree():
             return left + right
 
 
-    # def _query(self, start, end, i, istart, iend):
-    #     self.push(i, istart, iend)
-    #     if start <= istart and end >= iend:
-    #         return self.qarr[i]
-
-    #     elif end <= istart or start >= iend:
-    #         return 0
-
-    #     else:
-    #         mid = (istart + iend) // 2
-    #         left = self._query(self, start, end, 2*i, istart, mid)
-    #         right = self._query(self, start, end, 2*i+1, mid, iend)
-    #         return left + right
-    
-
 
 class GenericSetSumSegmentTree():
 
