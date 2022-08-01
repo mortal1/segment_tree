@@ -68,10 +68,7 @@ class SetSumSegmentTree():
         self.push(i, istart, iend)
 
         if end <= istart or start >= iend:
-            if value is not None:
-                return self.qarr[i]
-            else:
-                return 0
+            return 0
 
         elif start <= istart and end >= iend:
             if value is not None:
@@ -82,14 +79,14 @@ class SetSumSegmentTree():
             return self.qarr[i]
 
         else:
-            mid = (istart + iend) // 2
-            left = self._update(start, end, value, 2*i, istart, mid)
-            right = self._update(start, end, value, 2*i+1, mid, iend)
+            imid = (istart + iend) // 2
+            left = self._update(start, end, value, 2*i, istart, imid)
+            right = self._update(start, end, value, 2*i+1, imid, iend)
             if value is not None:
-                self.qarr[i] = left + right
+                self.qarr[i] = self.qarr[i*2] + self.qarr[i*2+1]
 
             # print(locals(), self.__dict__)
-            return self.qarr[i]
+            return left + right
 
 
     # def _query(self, start, end, i, istart, iend):
