@@ -119,7 +119,7 @@ class GenericSetSumSegmentTree():
             return q
 
     def push(self, i, istart, iend):
-        if self.uarr[i] == self.u_id:
+        if self.uarr[i] is None:
             return
         
         self.qarr[i] = self.merge_uq(self.uarr[i], self.qarr[i], istart, iend)
@@ -131,33 +131,31 @@ class GenericSetSumSegmentTree():
         self.uarr[i] = self.u_id
 
     def update(self, start, end, value):
-        return self._update(self, start, end, value, None, 1, 0, self.n)
+        self._update(start, end, value, 1, 0, self.n)
 
     def query(self, start, end):
-        return self._update(self, start, end, None, None, 1, 0, self.n)
+        return self._update(start, end, self.u_id, 1, 0, self.n)
 
 
     def _update(self, start, end, value, i, istart, iend):
         self.push(i, istart, iend)
+
         if end <= istart or start >= iend:
-            pass
+            return self.q_id # only queries
 
         elif start <= istart and end >= iend:
-            self.update_vals[i] = self.merge_uu(value, self.update_vals[i])
-            self.push(i, istart, iend)
+            self.uarr[i] = self.merge_uu(value, self.update_vals[i]) # only updates
+            self.push(i, istart, iend) # only updates
 
-            
+            return self.qarr[i] # only queries
+
         else:
-            mid = self.mid(istart, iend)
-            off_value = self.setval(off_value, self.uarr[i])
-            left = self._update(self, start, end, value, 2*i, istart, mid)
-            right = self._update(self, start, end, value, 2*i+1, mid, iend)
-            self.query_vals[i] = \
-                self.merge_qq(
-                    self.merge_,
-                    )
+            mid = (istart + iend) // 2
+            left = self._update(start, end, value, 2*i, istart, mid)
+            right = self._update(start, end, value, 2*i+1, mid, iend)
+            self.qarr[i] = self.merge_qq(self.qarr[i*2], self.qarr[i*2+1]) # only updates
         
-        return self.query_vals[i]
+            return self.merge_qq(left, right) # only queries
 
     # copied code
 #    def _update(self, start, end, value, i, istart, iend):
