@@ -52,7 +52,71 @@ def max2(a, b):
 
 max2_id = (max_id, max_id)
 
-mID = {
+
+# transfers
+
+def snd_snd(u, q, istart=None, iend=None):
+    if u is not None:
+        return u
+    else:
+        return q
+
+
+def snd_add(u, q, istart, iend):
+    if u is not None:
+        return u * (iend - istart)
+    else:
+        return q
+
+
+def snd_mul(u, q, istart, iend):
+    if u is not None:
+        return u ** (iend - istart)
+    else:
+        return q
+
+
+def snd_min(u, q, istart=None, iend=None):
+    if u is not None:
+        return u
+    else:
+        return q
+
+
+def snd_max(u, q, istart=None, iend=None):
+    if u is not None:
+        return u
+    else:
+        return q
+
+
+def add_add(u, q, istart, iend):
+    return q + u * (iend - istart)
+
+
+def add_min(u, q, istart=None, iend=None):
+    return q + u
+
+
+def add_max(u, q, istart=None, iend=None):
+    return q + u
+
+
+def mul_add(u, q, istart=None, iend=None):
+    return q * u
+
+
+# if u >= 0
+def mul_min(u, q, istart=None, iend=None):
+    return q * u
+
+
+# if u >= 0
+def mul_max(u, q, istart=None, iend=None):
+    return q * u
+
+
+default_ids = {
     snd: snd_id,
     add: add_id,
     mul: mul_id,
@@ -60,38 +124,16 @@ mID = {
     max: max_id,
 }
 
-# transfers
-
-def snd_snd(q, u, istart=None, iend=None):
-    if u is not None:
-        return u
-    else:
-        return q
-
-
-def add_snd(q, u, istart, iend):
-    if u is not None:
-        return u * (iend - istart)
-    else:
-        return q
-
-
-def mul_snd(q, u, istart, iend):
-    if u is not None:
-        return u ** (iend - istart)
-    else:
-        return q
-
-
-def min_snd(q, u, istart=None, iend=None):
-    if u is not None:
-        return u
-    else:
-        return q
-
-
-def max_snd(q, u, istart=None, iend=None):
-    if u is not None:
-        return u
-    else:
-        return q
+default_transfers = {
+    (snd, snd): snd_snd,
+    (snd, add): snd_add,
+    (snd, mul): snd_mul,
+    (snd, min): snd_min,
+    (snd, max): snd_max,
+    (add, add): add_add,
+    (add, min): add_min,
+    (add, max): add_max,
+    (mul, add): mul_add,
+    (mul, min): mul_min,
+    (mul, max): mul_max,
+}

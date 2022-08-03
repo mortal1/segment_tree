@@ -9,7 +9,9 @@
 
 # Interesting segment trees
 
-- strict over an array, updates are "set alternating tiles to 1/0 over given range" and queries are "longest consecutive run of 1s in range"
+- update = multiply, query = minimum
+    - if the multiplication is by a negative number, you need to store the range maximum as well so that you can flip it.
+- strict over an array, updates are "set every second tile over given range to 0/1 " and queries are "longest consecutive run of 1s in range"
     - implementation: Each tile is Even or Odd, and the iteration stops at pairs of tiles. 
         - Each segment tracks:
             - Whether all the odd tiles are filled
