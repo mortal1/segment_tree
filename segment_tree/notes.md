@@ -55,6 +55,7 @@
 - an update on a node above a previously updated node
 - parents can be queried and the updates from below are correctly calculated and propogated up
 - queries that cross multiple segments are correctly combined
+- queries do not change the answer to future queries (don't change the evaluation of segments)
 
 - the update/queries are actually lazy and stop at the largest segments that are contained within it
 - updates are pushed by updates and queries (non-Comm)
@@ -71,6 +72,13 @@
 
 # Interesting segment trees
 
+- sum_set, sum_mul and sum_add all have different implementation details worth considering.
+    - sum_set
+        - cannot be commutative (pushless)
+    - sum_mul: 
+        - query_id is 0 but an array initialised to it can never be updated
+    - sum_add:
+        - can be commutative, but the update (+) does not distribute over the query (+).
 - update = multiply, query = minimum
     - if the multiplication is by a negative number, you need to store the range maximum as well so that you can flip it.
 - strict over an array, updates are "set every second tile over given range to 0/1 " and queries are "longest consecutive run of 1s in range"
