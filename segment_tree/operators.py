@@ -44,20 +44,20 @@ def mul(a, b):
 mul_id = 1
 
 
-min = min
+min
 
 min_id = float("INF")
 
-max = max
+max
 
 max_id = float("-INF")
 
 
-def max2(a, b):
-    return (max(a[0], b[0]), max([min(a[0], b[0]), a[1], b[1]]))
+def maxn(a, b):
+    return sorted(set(a + b), reverse=True)[:len(b)]
 
 
-max2_id = (max_id, max_id)
+maxn_id = []
 
 
 def bounds(a, b):
@@ -130,20 +130,20 @@ def mul_max(u, q, istart=None, iend=None):
     return q * u
 
 
-def snd_max2(u, q, istart=None, iend=None):
+def snd_maxn(u, q, istart=None, iend=None):
     if u is not None:
-        return (u, max_id)
+        return [u]
     else:
         return q
 
 
-def add_max2(u, q, istart=None, iend=None):
-    return (q[0] + u, q[1] + u)
+def add_maxn(u, q, istart=None, iend=None):
+    return [v + u for v in q]
 
 
 # if u >= 0
-def mul_max2(u, q, istart=None, iend=None):
-    return (q[0] * u, q[1] * u)
+def mul_maxn(u, q, istart=None, iend=None):
+    return [v * u for v in q]
 
 
 def snd_bounds(u, q, istart=None, iend=None):
@@ -170,7 +170,7 @@ default_ids = {
     mul: mul_id,
     min: min_id,
     max: max_id,
-    max2: max2_id,
+    maxn: maxn_id,
     bounds: bounds_id,
 }
 
@@ -186,9 +186,9 @@ default_transfers = {
     (snd, max): snd_max,
     (add, max): add_max,
     (mul, max): mul_max,
-    (snd, max2): snd_max2,
-    (add, max2): add_max2,
-    (mul, max2): mul_max2,
+    (snd, maxn): snd_maxn,
+    (add, maxn): add_maxn,
+    (mul, maxn): mul_maxn,
     (snd, bounds): snd_bounds,
     (add, bounds): add_bounds,
     (mul, bounds): mul_bounds,
