@@ -34,21 +34,21 @@ class SumMulTree():
     def query(self, start, end):
         return self._update(start, end, 1, 1, 0, self.n)
 
-
     def _update(self, start, end, value, i, istart, iend):
         if istart >= end or iend <= start:
             return 0  # only queries
 
         elif istart >= start and iend <= end:
-            self.uarr[i] = value * self.uarr[i]  # only updates
+            self.uarr[i] *= value  # only updates
+            self.qarr[i] *= value  # only updates
 
-            return self.uarr[i] * self.qarr[i]  # only queries
+            return self.qarr[i]  # only queries
 
         else:
             imid = (istart + iend) // 2
             left = self._update(start, end, value, 2*i, istart, imid)
             right = self._update(start, end, value, 2*i+1, imid, iend)
-            self.qarr[i] = self.uarr[i*2] * self.qarr[i*2] + \
-                self.uarr[i*2+1] * self.qarr[i*2+1]  # only updates
+            self.qarr[i] = self.uarr[i] * (self.qarr[i*2] +
+                                           self.qarr[i*2+1])  # only updates
 
             return self.uarr[i] * (left + right)  # only queries

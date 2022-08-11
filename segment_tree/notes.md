@@ -19,6 +19,8 @@
   [ ] null
   [x] singleton
 [x] no push on commutative trees
+  [x] query values fully resolved
+  [ ] no redundant information (need both qarr[i] and uarr[i] to evaluate segment i)
 - query out-of-bounds
   [ ] Monoid query, return mempty
   [x] Semigroup query => Monoid (Maybe query), return Nothing
@@ -63,7 +65,9 @@
 
 - I found out I could merge _update and _query really easily if I don't care about constant factor performance
     - It's even easier if I care very very little about performance and push every time I enter a node
-- "lift" can be used to turn semigroups into monoids. But lifting transfer operations is much harder. I can define a "kernal" of the transfer (value*interval for a sum-set tree) then it's lift(snd)(q, lift1(kernal)(u, istart, iend))
+- "lift" can be used to turn semigroups into monoids. But lifting transfer operations is much harder. I can define a "kernel" of the transfer (value*interval for a sum-set tree) then it's lift(snd)(q, lift1(kernal)(u, istart, iend))
+- Only Commutative trees deal with the problem of redundant information in a segment, and needing to update both the query and the update values. Since normal trees push frequently, they can just put updates into the update values and let it shift to the query values by the time it's used.
+- in multidimenionsal segtrees, I need to update every path from the root to the node being upgraded, so that every affected sub/super/overlapping segment can access the information of the update somewhere.
 
 # Interesting segment trees
 

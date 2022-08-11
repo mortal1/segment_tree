@@ -1,6 +1,6 @@
 from __future__ import annotations
 from copy import copy, deepcopy
-from math import log2, floor
+from math import log2, ceil
 from typing import Callable, TypeVar, Union, Iterable
 import operators
 from operators import default_ids, default_transfers
@@ -36,19 +36,25 @@ class GenericSegmentTree():
         self.transfer = transfer_op
 
         if isinstance(arr, int):
-            n = int(2**(floor(log2(arr-1))+1))
+            k = arr
+            n = 2**ceil(log2(k))
             self.n = n
-            self.qarr = [query_id]*(2*self.n)
-            self.uarr = [update_id]*(2*self.n)
+            self.qarr = [query_id]*(2*n)
+            self.uarr = [update_id]*(2*n)
 
         elif isinstance(arr, Iterable):
-            n = int(2**(floor(log2(len(arr)-1))+1))
+            k = len(arr)
+            n = 2**ceil(log2(k))
             self.n = n
-            self.qarr = [query_id]*n + list(arr) + [query_id]*(n-len(arr))
+            self.qarr = [query_id]*n + list(arr) + [query_id]*(n-k)
             self.uarr = [update_id]*(2*n)
 
         else:
             raise TypeError
+
+        # evaluating the tree at all the intermediate segments
+        for i in range(n-1, -1, -1):
+            self.qarr[i] = self.qarr[i*2] + self.qarr[i*2+1]
 
     def push(self: GenericSegmentTree,
              i: int,
