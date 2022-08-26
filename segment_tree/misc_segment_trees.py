@@ -46,7 +46,7 @@ class StrictBottomUpSetSumSegmentTree():
             end /= 2
 
 
-class SetSumSegmentTree():
+class SumSetSegmentTree():
 
     def __init__(self, n):
         self.n = int(2**(floor(log2(n-1))+1))
