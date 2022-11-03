@@ -92,15 +92,19 @@ class GenericSegmentTree():
                 ):
         self.push(i, istart, iend)
 
+        # The segment is entirely outside of the query/update range
         if istart >= end or iend <= start:
             return self.query_id  # only queries
 
+        # The segment is entirely contained in the query/update range
         elif istart >= start and iend <= end:
             self.uarr[i] = self.update_add(value, self.uarr[i])  # only updates
             self.push(i, istart, iend)  # only updates
 
             return self.qarr[i]  # only queries
 
+        # The segment partially overlaps query/update range
+        # We query/update both children
         else:
             imid = (istart + iend) // 2
             left = self._update(start, end, value, 2*i, istart, imid)

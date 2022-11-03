@@ -11,18 +11,25 @@ class SumAddTree():
 
     def __init__(self, arr):
 
-        if isinstance(arr, int):
-            k = arr
-            n = 2**ceil(log2(k))
+        if isinstance(arr, int) or isinstance(arr, tuple):
+            if isinstance(arr, int):
+                r, c = arr, arr
+            else:
+                r, c = arr
+            n = 2**ceil(log2(max(r, c)))
             self.n = n
-            self.qarr = [0]*(2*n)
-            self.uarr = [0]*(2*n)
+            self.qarr = [[0]*(2*n) for _ in range(2*n)]
+            self.uarr = [[0]*(2*n) for _ in range(2*n)]
 
         elif isinstance(arr, Iterable):
-            k = len(arr)
-            n = 2**ceil(log2(k))
+            r = len(arr)
+            c = len(arr[0]) if r else 0
+            arrT = zip(*arr)
+            n = 2**ceil(log2(max(r, c)))
             self.n = n
-            self.qarr = [0]*n + list(arr) + [0]*(n-k)
+            self.qarr = [[0]*(2*n) for _ in range(n)]\
+                + [[0]*n + arrT[i] + [0]*(n-k) for i in range(k)]\
+                + [[0]*(2*n) for _ in range(n-k)]
             self.uarr = [0]*(2*n)
 
         # evaluating the tree at all the intermediate segments

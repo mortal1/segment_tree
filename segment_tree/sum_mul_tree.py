@@ -15,7 +15,7 @@ class SumMulTree():
             n = 2**ceil(log2(k))
             self.n = n
             self.qarr = [0]*n + [1]*k + [0]*(n-k)
-            self.uarr = [1]*(2*self.n)
+            self.uarr = [1]*(2*n)
 
         elif isinstance(arr, Iterable):
             k = len(arr)
