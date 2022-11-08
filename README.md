@@ -1,2 +1,4 @@
 # segment_tree
-implementing a generic interface for segment trees
+Implementing a generic interface for segment trees
+
+Currently still in development, correctness and speed are not guaranteed.
