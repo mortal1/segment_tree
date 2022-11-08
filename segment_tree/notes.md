@@ -51,8 +51,8 @@
 - entire updated nodes are evaluated correctly
 - A query can punch through an updated segment to a node below and the update is pushed correctly. The update is passed to both children.
 - after being punched through, the segment can still be queried correctly
-- an update on a segment above a previously update node
-- an update on a node above a previously updated node
+- an update on a segment above a previously updated segment
+- an update on a segment below a previously updated segment
 - parents can be queried and the updates from below are correctly calculated and propogated up
 - queries that cross multiple segments are correctly combined
 - queries do not change the answer to future queries (don't change the evaluation of segments)
@@ -117,3 +117,4 @@
 - placing values at n+i instead of N+i (N = 2^ceil(log2(n)))
 - overwriting leaf values with their children (outside array, or 0s for iterative range tree)
 - failing to update leaf values with laz
+- failing to update any values in laz
