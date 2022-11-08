@@ -56,6 +56,7 @@
 - parents can be queried and the updates from below are correctly calculated and propogated up
 - queries that cross multiple segments are correctly combined
 - queries do not change the answer to future queries (don't change the evaluation of segments)
+- left and right edges of the range tree work correctly
 
 - the update/queries are actually lazy and stop at the largest segments that are contained within it
 - updates are pushed by updates and queries (non-Comm)

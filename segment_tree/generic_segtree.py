@@ -14,18 +14,18 @@ class GenericSegmentTree():
     def __init__(self: GenericSegmentTree,
                  arr: Union[Iterable[Q], int],
                  update_add: Callable[[U, U], U] = operators.snd,
-                 update_id: Union[U, str] = 'default',
+                 update_id: Union[U, str] = None,
                  query_add: Callable[[Q, Q], Q] = operators.add,
-                 query_id: Union[Q, str] = 'default',
+                 query_id: Union[Q, str] = None,
                  transfer_op: Union[Callable[[U, Q, int, int], Q], str]
-                 = 'default'
+                 = None
                  ):
 
-        if update_id == 'default':
-            update_id: self.Q = default_ids[update_add]
-        if query_id == 'default':
+        if update_id is None and update_add in default_ids:
+            update_id: self.U = default_ids[update_add]
+        if query_id is None and query_add in default_ids:
             query_id: self.Q = default_ids[query_add]
-        if transfer_op == 'default':
+        if transfer_op is None and (update_add, query_add) in default_transfers:
             transfer_op: Callable[[self.U, self.Q, int, int],
                                   self.Q] = default_transfers[(update_add, query_add)]
 
@@ -53,7 +53,7 @@ class GenericSegmentTree():
             raise TypeError
 
         # evaluating the tree at all the intermediate segments
-        for i in range(n-1, -1, -1):
+        for i in range(n-1, 0, -1):
             self.qarr[i] = self.qarr[i*2] + self.qarr[i*2+1]
 
     def push(self: GenericSegmentTree,
