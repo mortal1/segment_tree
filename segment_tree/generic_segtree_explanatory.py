@@ -59,7 +59,7 @@ class GenericSegmentTree():
 
         # Evaluating the tree at all the intermediate segments
         for i in range(n-1, 0, -1):
-            self.qarr[i] = self.qarr[i*2] + self.qarr[i*2+1]
+            self.qarr[i] = self.query_add(self.qarr[i*2], self.qarr[i*2+1])
 
 
     def push(self, i, istart, iend):
@@ -85,7 +85,8 @@ class GenericSegmentTree():
     def _update(self, start, end, value, i, istart, iend):
         # Performs both an update and query
 
-        # Ensures the update has been pushed out of the node
+        # Ensures previous updates have been pushed out of the node
+        # And that the node is fully evaluated
         self.push(i, istart, iend)
 
         # If the query/update range is entirely outside of the segment
