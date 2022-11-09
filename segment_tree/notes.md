@@ -114,7 +114,10 @@
 
 # known bugs
 - forgetting to do s-1 to return to 0-indexing
-- placing values at n+i instead of N+i (N = 2^ceil(log2(n)))
+- using n instead of N
+  - placing values at n+i instead of N+i (N = 2^ceil(log2(n)))
+  - checking i < n before pulling from children, instead of i < N
+  - easy fix is to take n out of the global scope
 - overwriting leaf values with their children (outside array, or 0s for iterative range tree)
 - failing to update leaf values with laz
 - failing to update any values in laz
