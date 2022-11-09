@@ -7,7 +7,7 @@ from operators import default_ids, default_transfers
 
 # incomplete
 
-
+# Needs more code
 class StrictBottomUpSetSumSegmentTree():
 
     def __init__(self, arr):

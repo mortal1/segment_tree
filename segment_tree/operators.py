@@ -61,103 +61,113 @@ maxn_id = []
 
 
 def bounds(a, b):
-    return (min(a[0], b[0]), max(a[1], b[1]))
+    amin, amax = a
+    bmin, bmax = b
+    return min(amin, bmin), max(amax, bmax)
 
 
 bounds_id = (min_id, max_id)
 
 
+def inorder(a, b):
+    amin, amax, aordered = a
+    bmin, bmax, bordered = b
+    return min(amin, bmin), max(amax, bmax),\
+        aordered and bordered and amax < bmin
+
+inorder_id = (min_id, max_id, True)
+
 # transfers
 
-def snd_snd(u, q, istart=None, iend=None):
+def snd_snd(q, u, istart=None, iend=None):
     if u is not None:
         return u
     else:
         return q
 
 
-def snd_add(u, q, istart, iend):
+def snd_add(q, u, istart, iend):
     if u is not None:
         return u * (iend - istart)
     else:
         return q
 
 
-def add_add(u, q, istart, iend):
+def add_add(q, u, istart, iend):
     return q + u * (iend - istart)
 
 
-def mul_add(u, q, istart=None, iend=None):
+def mul_add(q, u, istart=None, iend=None):
     return q * u
 
 
-def snd_mul(u, q, istart, iend):
+def snd_mul(q, u, istart, iend):
     if u is not None:
         return u ** (iend - istart)
     else:
         return q
 
 
-def snd_min(u, q, istart=None, iend=None):
+def snd_min(q, u, istart=None, iend=None):
     if u is not None:
         return u
     else:
         return q
 
 
-def add_min(u, q, istart=None, iend=None):
+def add_min(q, u, istart=None, iend=None):
     return q + u
 
 
 # if u >= 0
-def mul_min(u, q, istart=None, iend=None):
+def mul_min(q, u, istart=None, iend=None):
     return q * u
 
 
-def snd_max(u, q, istart=None, iend=None):
+def snd_max(q, u, istart=None, iend=None):
     if u is not None:
         return u
     else:
         return q
 
 
-def add_max(u, q, istart=None, iend=None):
+def add_max(q, u, istart=None, iend=None):
     return q + u
 
 
 # if u >= 0
-def mul_max(u, q, istart=None, iend=None):
+def mul_max(q, u, istart=None, iend=None):
     return q * u
 
 
-def snd_maxn(u, q, istart=None, iend=None):
+def snd_maxn(q, u, istart=None, iend=None):
     if u is not None:
         return [u]
     else:
         return q
 
 
-def add_maxn(u, q, istart=None, iend=None):
+def add_maxn(q, u, istart=None, iend=None):
     return [v + u for v in q]
 
 
 # if u >= 0
-def mul_maxn(u, q, istart=None, iend=None):
+def mul_maxn(q, u, istart=None, iend=None):
     return [v * u for v in q]
 
 
-def snd_bounds(u, q, istart=None, iend=None):
+def snd_bounds(q, u, istart=None, iend=None):
     if u is not None:
         return (u, u)
     else:
         return q
 
 
-def add_bounds(u, q, istart=None, iend=None):
+def add_bounds(q, u, istart=None, iend=None):
     return (q[0] + u, q[1] + u)
 
 
-def mul_bounds(u, q, istart=None, iend=None):
+def mul_bounds(q, u, istart=None, iend=None):
     if u >= 0:
         return (q[0] * u, q[1] * u)
     else:
@@ -172,6 +182,7 @@ default_ids = {
     max: max_id,
     maxn: maxn_id,
     bounds: bounds_id,
+    inorder: inorder_id
 }
 
 default_transfers = {

@@ -17,7 +17,7 @@ class GenericSegmentTree():
                  update_id: Union[U, str] = None,
                  query_add: Callable[[Q, Q], Q] = operators.add,
                  query_id: Union[Q, str] = None,
-                 transfer_op: Union[Callable[[U, Q, int, int], Q], str]
+                 transfer_op: Union[Callable[[Q, U, int, int], Q], str]
                  = None
                  ):
 
@@ -26,7 +26,7 @@ class GenericSegmentTree():
         if query_id is None and query_add in default_ids:
             query_id: self.Q = default_ids[query_add]
         if transfer_op is None and (update_add, query_add) in default_transfers:
-            transfer_op: Callable[[self.U, self.Q, int, int],
+            transfer_op: Callable[[self.Q, self.U, int, int],
                                   self.Q] = default_transfers[(update_add, query_add)]
 
         self.query_add = query_add
@@ -36,24 +36,24 @@ class GenericSegmentTree():
         self.transfer = transfer_op
 
         if isinstance(arr, int):
-            k = arr
-            n = 2**ceil(log2(k))
-            self.n = n
-            self.qarr = [query_id]*(2*n)
-            self.uarr = [update_id]*(2*n)
+            n = arr
+            N = 2**ceil(log2(n))
+            self.N = N
+            self.qarr = [query_id]*(2*N)
+            self.uarr = [update_id]*(2*N)
 
         elif isinstance(arr, Iterable):
-            k = len(arr)
-            n = 2**ceil(log2(k))
-            self.n = n
-            self.qarr = [query_id]*n + list(arr) + [query_id]*(n-k)
-            self.uarr = [update_id]*(2*n)
+            n = len(arr)
+            N = 2**ceil(log2(n))
+            self.N = N
+            self.qarr = [query_id]*N + list(arr) + [query_id]*(N-n)
+            self.uarr = [update_id]*(2*N)
 
         else:
             raise TypeError
 
         # evaluating the tree at all the intermediate segments
-        for i in range(n-1, 0, -1):
+        for i in range(N-1, 0, -1):
             self.qarr[i] = self.qarr[i*2] + self.qarr[i*2+1]
 
     def push(self: GenericSegmentTree,
@@ -61,11 +61,11 @@ class GenericSegmentTree():
              istart: int,
              iend: int
              ):
-        self.qarr[i] = self.transfer(self.uarr[i], self.qarr[i], istart, iend)
+        self.qarr[i] = self.transfer(self.qarr[i], self.uarr[i], istart, iend)
 
-        if i < self.n:
-            self.uarr[i*2] = self.update_add(self.uarr[i], self.uarr[i*2])
-            self.uarr[i*2+1] = self.update_add(self.uarr[i], self.uarr[i*2+1])
+        if i < self.N:
+            self.uarr[i*2] = self.update_add(self.uarr[i*2], self.uarr[i])
+            self.uarr[i*2+1] = self.update_add(self.uarr[i*2+1], self.uarr[i])
 
         self.uarr[i] = self.update_id
 
@@ -74,13 +74,13 @@ class GenericSegmentTree():
                end: int,
                value: U
                ):
-        self._update(start, end, value, 1, 0, self.n)
+        self._update(start, end, value, 1, 0, self.N)
 
     def query(self: GenericSegmentTree,
               start: int,
               end: int,
               ):
-        return self._update(start, end, self.update_id, 1, 0, self.n)
+        return self._update(start, end, self.update_id, 1, 0, self.N)
 
     def _update(self: GenericSegmentTree,
                 start: int,
@@ -98,7 +98,7 @@ class GenericSegmentTree():
 
         # The query/update range entirely contains the segment
         elif start <= istart and end >= iend:
-            self.uarr[i] = self.update_add(value, self.uarr[i])  # only updates
+            self.uarr[i] = self.update_add(self.uarr[i], value)  # only updates
             self.push(i, istart, iend)  # only updates
 
             return self.qarr[i]  # only queries
