@@ -2,7 +2,6 @@ from math import log2, ceil
 
 # The default operators used for the segment tree
 
-
 def snd(a, b):
     # Returns the second value if it exists. Behaves like "set a to b"
     if b is not None:
@@ -10,15 +9,12 @@ def snd(a, b):
     else:
         return a
 
-
 snd_id = None
 
-
-def add(a, b):
+def sum(a, b):
     return a + b
 
-
-add_id = 0
+sum_id = 0
 
 
 def snd_add(q, u, istart, iend):
@@ -35,8 +31,8 @@ class GenericSegmentTree():
                  arr,
                  update_add=snd,
                  update_id=snd_id,
-                 query_add=add,
-                 query_id=add_id,
+                 query_add=sum,
+                 query_id=sum_id,
                  transfer_op=snd_add
                  ):
 
@@ -76,11 +72,14 @@ class GenericSegmentTree():
         # Deletes it
         self.uarr[i] = self.update_id
 
+
     def update(self, start, end, value):  # does not return
         self._update(start, end, value, 1, 0, self.N)
 
+
     def query(self, start, end):  # updates with update_id
         return self._update(start, end, self.update_id, 1, 0, self.N)
+
 
     def _update(self, start, end, value, i, istart, iend):
         # Performs both an update and query
