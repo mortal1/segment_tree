@@ -98,7 +98,7 @@ class GenericSegmentTree():
 
         # The query/update range entirely contains the segment
         elif start <= istart and end >= iend:
-            self.uarr[i] = self.update_add(self.uarr[i], value)  # only updates
+            self.uarr[i] = value  # only updates
             self.push(i, istart, iend)  # only updates
 
             return self.qarr[i]  # only queries

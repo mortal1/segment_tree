@@ -61,9 +61,9 @@ class GenericSegmentTree():
         for i in range(n-1, 0, -1):
             self.qarr[i] = self.qarr[i*2] + self.qarr[i*2+1]
 
-    # Processes an update in the update tree,
 
     def push(self, i, istart, iend):
+        # Processes an update in the update tree
 
         # Transfers it horisontally to the query tree
         self.qarr[i] = self.transfer(self.qarr[i], self.uarr[i], istart, iend)
@@ -76,27 +76,30 @@ class GenericSegmentTree():
         # Deletes it
         self.uarr[i] = self.update_id
 
-    def update(self, start, end, value):  # no return
+    def update(self, start, end, value):  # does not return
         self._update(start, end, value, 1, 0, self.N)
 
     def query(self, start, end):  # updates with update_id
         return self._update(start, end, self.update_id, 1, 0, self.N)
 
     def _update(self, start, end, value, i, istart, iend):
+        # Performs both an update and query
+
+        # Ensures the update has been pushed out of the node
         self.push(i, istart, iend)
 
-        # The query/update range is entirely outside of the segment
+        # If the query/update range is entirely outside of the segment
         if end <= istart or start >= iend:
             return self.query_id  # only queries
 
-        # The query/update range entirely contains the segment
+        # If the query/update range entirely contains the segment
         elif start <= istart and end >= iend:
-            self.uarr[i] = self.update_add(self.uarr[i], value)  # only updates
+            self.uarr[i] = value  # only updates
             self.push(i, istart, iend)  # only updates
 
             return self.qarr[i]  # only queries
 
-        # The segment partially overlaps query/update range
+        # If the segment partially overlaps query/update range
         # We query/update both children
         else:
             imid = (istart + iend) // 2
