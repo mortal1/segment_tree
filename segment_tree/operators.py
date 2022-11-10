@@ -1,4 +1,4 @@
-# Miscellania
+# Higher order functions
 
 class Monoid():
     def op(a, b):
@@ -7,7 +7,7 @@ class Monoid():
     id = None
 
 
-def lift(f):
+def lift_alternative(f):
     def new_f(a, b):
         if a is None:
             return b
@@ -15,6 +15,16 @@ def lift(f):
             return a
         else:
             return f(a, b)
+    return new_f
+
+def lift_transfer(f):
+    def new_f(q, u):
+        if q is None:
+            return None
+        elif u is None:
+            return q
+        else:
+            return f(u, q)
     return new_f
 
 
