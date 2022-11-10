@@ -1,4 +1,2 @@
-# segment_tree
-Implementing a generic interface for segment trees
-
-Currently still in development, correctness and speed are not guaranteed.
+# segment_tree - semigroup branch
+An attempt to make segtree not require monoid ids, but I realised I can incorporate it into generic segtree.
