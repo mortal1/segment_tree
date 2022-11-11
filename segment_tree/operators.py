@@ -18,6 +18,18 @@ def lift(f):
     return new_f
 
 
+def lift_transfer(f):
+    def new_f(a, b):
+        if a is None:
+            return None
+        elif b is None:
+            return a
+        else:
+            return f(a, b)
+    return new_f
+
+
+
 # Operators
 
 def snd(a, b):
@@ -27,37 +39,22 @@ def snd(a, b):
         return a
 
 
-snd_id = None
-
-
-def add(a, b):
+def sum(a, b):
     return a + b
-
-
-add_id = 0
 
 
 def mul(a, b):
     return a * b
 
 
-mul_id = 1
-
-
 min
 
-min_id = float("INF")
 
 max
 
-max_id = float("-INF")
-
 
 def maxn(a, b):
-    return sorted(set(a + b), reverse=True)[:len(b)]
-
-
-maxn_id = []
+    return sorted(a + b, reverse=True)[:len(b)]
 
 
 def bounds(a, b):
@@ -66,141 +63,181 @@ def bounds(a, b):
     return min(amin, bmin), max(amax, bmax)
 
 
-bounds_id = (min_id, max_id)
-
-
 def inorder(a, b):
     amin, amax, aordered = a
     bmin, bmax, bordered = b
     return min(amin, bmin), max(amax, bmax),\
-        aordered and bordered and amax < bmin
+        aordered and bordered and amax <= bmin
 
-inorder_id = (min_id, max_id, True)
+
+ids = {
+    snd: None,
+    sum: 0,
+    mul: 1,
+    min: float("INF"),
+    max: float("-INF"),
+    maxn: [],
+    bounds: (float("INF"), float("-INF")),
+    inorder: (float("INF"), float("-INF"), True)
+}
+
+
+
 
 # transfers
 
-def snd_snd(q, u, istart=None, iend=None):
-    if u is not None:
-        return u
-    else:
-        return q
+def add_context(f):
+    def new_f(q, u, istart=None, iend=None):
+        return f(q, u)
+    return new_f
+
+snd_snd = add_context(snd)
+# def snd_snd(q, u, istart=None, iend=None):
+#     if u is not None:
+#         return u
+#     else:
+#         return q
 
 
-def snd_add(q, u, istart, iend):
+def sum_snd(q, u, istart, iend):
     if u is not None:
         return u * (iend - istart)
     else:
         return q
 
 
-def add_add(q, u, istart, iend):
+def sum_sum(q, u, istart, iend):
     return q + u * (iend - istart)
 
 
-def mul_add(q, u, istart=None, iend=None):
-    return q * u
+sum_mul = add_context(mul)
+# def sum_mul(q, u, istart=None, iend=None):
+#     return q * u
 
 
-def snd_mul(q, u, istart, iend):
+def mul_snd(q, u, istart, iend):
     if u is not None:
         return u ** (iend - istart)
     else:
         return q
 
 
-def snd_min(q, u, istart=None, iend=None):
-    if u is not None:
-        return u
-    else:
-        return q
+def mul_mul(q, u, istart, iend):
+    return q * u ** (iend - istart)
 
 
-def add_min(q, u, istart=None, iend=None):
-    return q + u
+min_snd = add_context(snd)
+# def min_snd(q, u, istart=None, iend=None):
+#     if u is not None:
+#         return u
+#     else:
+#         return q
 
 
-# if u >= 0
-def mul_min(q, u, istart=None, iend=None):
-    return q * u
-
-
-def snd_max(q, u, istart=None, iend=None):
-    if u is not None:
-        return u
-    else:
-        return q
-
-
-def add_max(q, u, istart=None, iend=None):
-    return q + u
+min_sum = add_context(sum)
+# def min_sum(q, u, istart=None, iend=None):
+#     return q + u
 
 
 # if u >= 0
-def mul_max(q, u, istart=None, iend=None):
-    return q * u
+min_mul = add_context(mul)
+# def min_mul(q, u, istart=None, iend=None):
+#     return q * u
 
 
-def snd_maxn(q, u, istart=None, iend=None):
+min_max = add_context(max)
+# def min_max(q, u, istart=None, iend=None):
+#     return max(q, u)
+
+
+min_min = add_context(min)
+# def min_min(q, u, istart=None, iend=None):
+#     return min(q, u)
+
+
+max_snd = add_context(snd)
+# def max_snd(q, u, istart=None, iend=None):
+#     if u is not None:
+#         return u
+#     else:
+#         return q
+
+
+max_sum = add_context(sum)
+# def max_sum(q, u, istart=None, iend=None):
+#     return q + u
+
+
+# if u >= 0
+max_mul = add_context(mul)
+# def max_mul(q, u, istart=None, iend=None):
+#     return q * u
+
+
+max_max = add_context(max)
+# def max_max(q, u, istart=None, iend=None):
+#     return max(q, u)
+
+max_min = add_context(min)
+# def max_min(q, u, istart=None, iend=None):
+#     return min(q, u)
+
+
+def maxn_snd(q, u, istart=None, iend=None):
     if u is not None:
         return [u]
     else:
         return q
 
 
-def add_maxn(q, u, istart=None, iend=None):
+def maxn_sum(q, u, istart=None, iend=None):
     return [v + u for v in q]
 
 
 # if u >= 0
-def mul_maxn(q, u, istart=None, iend=None):
+def maxn_mul(q, u, istart=None, iend=None):
     return [v * u for v in q]
 
 
-def snd_bounds(q, u, istart=None, iend=None):
+def bounds_snd(q, u, istart=None, iend=None):
     if u is not None:
         return (u, u)
     else:
         return q
 
 
-def add_bounds(q, u, istart=None, iend=None):
+def bounds_sum(q, u, istart=None, iend=None):
     return (q[0] + u, q[1] + u)
 
 
-def mul_bounds(q, u, istart=None, iend=None):
+def bounds_mul(q, u, istart=None, iend=None):
     if u >= 0:
         return (q[0] * u, q[1] * u)
     else:
         return (q[1] * u, q[0] * u)
 
 
-default_ids = {
-    snd: snd_id,
-    add: add_id,
-    mul: mul_id,
-    min: min_id,
-    max: max_id,
-    maxn: maxn_id,
-    bounds: bounds_id,
-    inorder: inorder_id
-}
 
-default_transfers = {
+transfers = {
     (snd, snd): snd_snd,
-    (snd, add): snd_add,
-    (add, add): add_add,
-    (mul, add): mul_add,
-    (snd, mul): snd_mul,
-    (snd, min): snd_min,
-    (add, min): add_min,
-    (mul, min): mul_min,
-    (snd, max): snd_max,
-    (add, max): add_max,
-    (mul, max): mul_max,
-    (snd, maxn): snd_maxn,
-    (add, maxn): add_maxn,
-    (mul, maxn): mul_maxn,
-    (snd, bounds): snd_bounds,
-    (add, bounds): add_bounds,
-    (mul, bounds): mul_bounds,
+    (sum, snd): sum_snd,
+    (mul, snd): mul_snd,
+    (min, snd): min_snd,
+    (max, snd): max_snd,
+    (maxn, snd): maxn_snd,
+    (bounds, snd): bounds_snd,
+    (sum, sum): sum_sum,
+    (min, sum): min_sum,
+    (max, sum): max_sum,
+    (maxn, sum): maxn_sum,
+    (bounds, sum): bounds_sum,
+    (sum, mul): sum_mul,
+    (min, mul): min_mul,
+    (max, mul): max_mul,
+    (maxn, mul): maxn_mul,
+    (bounds, mul): bounds_mul,
+    (min, max): max_max,
+    (max, max): max_max,
+    (min, min): max_min,
+    (max, min): max_min,
 }

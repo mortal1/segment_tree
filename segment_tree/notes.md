@@ -112,7 +112,7 @@
 - a range tree with query "what is the k'th letter in the string concatenation of this range" and update "add this letter to the end of every string in this range". Idea is to return functions, and compose functions into one mega function. The function would implement a binary-searchable structure
 
 
-# known bugs
+# known potential bugs
 - forgetting to do s-1 to return to 0-indexing
 - using n instead of N
   - placing values at n+i instead of N+i (N = 2^ceil(log2(n)))

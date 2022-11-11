@@ -1,37 +1,61 @@
 from __future__ import annotations
-from copy import copy, deepcopy
 from math import log2, ceil
 from typing import Callable, TypeVar, Union, Iterable
 import operators
-from operators import default_ids, default_transfers
+from operators import ids, transfers, lift, lift_transfer
 
+
+DEFAULT = 'default'
 
 class GenericSegmentTree():
 
     Q = TypeVar('Q')
     U = TypeVar('U')
 
+    DEFAULT = 'default'
+
     def __init__(self: GenericSegmentTree,
                  arr: Union[Iterable[Q], int],
-                 update_add: Callable[[U, U], U] = operators.snd,
-                 update_id: Union[U, str] = None,
-                 query_add: Callable[[Q, Q], Q] = operators.add,
-                 query_id: Union[Q, str] = None,
+                 query_plus: Callable[[Q, Q], Q] = operators.sum,
+                 update_plus: Callable[[U, U], U] = operators.snd,
+                 query_id: Union[Q, str] = DEFAULT,
+                 update_id: Union[U, str] = DEFAULT,
                  transfer_op: Union[Callable[[Q, U, int, int], Q], str]
-                 = None
+                 = DEFAULT
                  ):
 
-        if update_id is None and update_add in default_ids:
-            update_id: self.U = default_ids[update_add]
-        if query_id is None and query_add in default_ids:
-            query_id: self.Q = default_ids[query_add]
-        if transfer_op is None and (update_add, query_add) in default_transfers:
-            transfer_op: Callable[[self.Q, self.U, int, int],
-                                  self.Q] = default_transfers[(update_add, query_add)]
 
-        self.query_add = query_add
+        lift_required = False
+
+
+        if update_id is DEFAULT:
+            try:
+                update_id = ids[update_plus]
+            except KeyError:
+                update_id = None
+                update_plus = lift(update_plus)
+                lift_required = True
+
+        if query_id is DEFAULT:
+            try:
+                query_id = ids[query_plus]
+            except KeyError:
+                query_id = None
+                query_plus = lift(query_plus)
+                lift_required = True
+
+        if transfer_op is DEFAULT:
+            if (query_plus, update_plus) in transfers:
+                transfer_op = transfers[(update_plus, query_plus)]
+            else:
+                raise ValueError
+
+        if lift_required:
+            transfer_op = lift_transfer(transfer_op)
+
+        self.query_plus = query_plus  
+        self.update_plus = update_plus
         self.query_id = query_id
-        self.update_add = update_add
         self.update_id = update_id
         self.transfer = transfer_op
 
@@ -52,9 +76,10 @@ class GenericSegmentTree():
         else:
             raise TypeError
 
-        # evaluating the tree at all the intermediate segments
+        # initialising the tree at all the intermediate segments
         for i in range(N-1, 0, -1):
-            self.qarr[i] = self.qarr[i*2] + self.qarr[i*2+1]
+            self.qarr[i] = self.query_plus(self.qarr[i*2], self.qarr[i*2+1])
+
 
     def push(self: GenericSegmentTree,
              i: int,
@@ -64,10 +89,11 @@ class GenericSegmentTree():
         self.qarr[i] = self.transfer(self.qarr[i], self.uarr[i], istart, iend)
 
         if i < self.N:
-            self.uarr[i*2] = self.update_add(self.uarr[i*2], self.uarr[i])
-            self.uarr[i*2+1] = self.update_add(self.uarr[i*2+1], self.uarr[i])
+            self.uarr[i*2] = self.update_plus(self.uarr[i*2], self.uarr[i])
+            self.uarr[i*2+1] = self.update_plus(self.uarr[i*2+1], self.uarr[i])
 
         self.uarr[i] = self.update_id
+
 
     def update(self: GenericSegmentTree,
                start: int,
@@ -76,11 +102,13 @@ class GenericSegmentTree():
                ):
         self._update(start, end, value, 1, 0, self.N)
 
+
     def query(self: GenericSegmentTree,
               start: int,
               end: int,
               ):
         return self._update(start, end, self.update_id, 1, 0, self.N)
+
 
     def _update(self: GenericSegmentTree,
                 start: int,
@@ -109,7 +137,7 @@ class GenericSegmentTree():
             imid = (istart + iend) // 2
             left = self._update(start, end, value, 2*i, istart, imid)
             right = self._update(start, end, value, 2*i+1, imid, iend)
-            self.qarr[i] = self.query_add(
+            self.qarr[i] = self.query_plus(
                 self.qarr[i*2], self.qarr[i*2+1])  # only updates
 
-            return self.query_add(left, right)  # only queries
+            return self.query_plus(left, right)  # only queries
