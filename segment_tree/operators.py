@@ -86,17 +86,18 @@ ids = {
 
 # transfers
 
-def add_context(f):
-    def new_f(q, u, istart=None, iend=None):
-        return f(q, u)
-    return new_f
+# def add_context(f):
+#     def new_f(q, u, istart=None, iend=None):
+#         return f(q, u)
+#     return new_f
 
-snd_snd = add_context(snd)
-# def snd_snd(q, u, istart=None, iend=None):
-#     if u is not None:
-#         return u
-#     else:
-#         return q
+
+# snd_snd = add_context(snd)
+def snd_snd(q, u, istart=None, iend=None):
+    if u is not None:
+        return u
+    else:
+        return q
 
 
 def sum_snd(q, u, istart, iend):
@@ -110,9 +111,9 @@ def sum_sum(q, u, istart, iend):
     return q + u * (iend - istart)
 
 
-sum_mul = add_context(mul)
-# def sum_mul(q, u, istart=None, iend=None):
-#     return q * u
+# sum_mul = add_context(mul)
+def sum_mul(q, u, istart=None, iend=None):
+    return q * u
 
 
 def mul_snd(q, u, istart, iend):
@@ -126,61 +127,62 @@ def mul_mul(q, u, istart, iend):
     return q * u ** (iend - istart)
 
 
-min_snd = add_context(snd)
-# def min_snd(q, u, istart=None, iend=None):
-#     if u is not None:
-#         return u
-#     else:
-#         return q
+# min_snd = add_context(snd)
+def min_snd(q, u, istart=None, iend=None):
+    if u is not None:
+        return u
+    else:
+        return q
 
 
-min_sum = add_context(sum)
-# def min_sum(q, u, istart=None, iend=None):
-#     return q + u
-
-
-# if u >= 0
-min_mul = add_context(mul)
-# def min_mul(q, u, istart=None, iend=None):
-#     return q * u
-
-
-min_max = add_context(max)
-# def min_max(q, u, istart=None, iend=None):
-#     return max(q, u)
-
-
-min_min = add_context(min)
-# def min_min(q, u, istart=None, iend=None):
-#     return min(q, u)
-
-
-max_snd = add_context(snd)
-# def max_snd(q, u, istart=None, iend=None):
-#     if u is not None:
-#         return u
-#     else:
-#         return q
-
-
-max_sum = add_context(sum)
-# def max_sum(q, u, istart=None, iend=None):
-#     return q + u
+# min_sum = add_context(sum)
+def min_sum(q, u, istart=None, iend=None):
+    return q + u
 
 
 # if u >= 0
-max_mul = add_context(mul)
-# def max_mul(q, u, istart=None, iend=None):
-#     return q * u
+# min_mul = add_context(mul)
+def min_mul(q, u, istart=None, iend=None):
+    return q * u
 
 
-max_max = add_context(max)
-# def max_max(q, u, istart=None, iend=None):
-#     return max(q, u)
+# min_max = add_context(max)
+def min_max(q, u, istart=None, iend=None):
+    return max(q, u)
 
-max_min = add_context(min)
-# def max_min(q, u, istart=None, iend=None):
-#     return min(q, u)
+
+# min_min = add_context(min)
+def min_min(q, u, istart=None, iend=None):
+    return min(q, u)
+
+
+# max_snd = add_context(snd)
+def max_snd(q, u, istart=None, iend=None):
+    if u is not None:
+        return u
+    else:
+        return q
+
+
+# max_sum = add_context(sum)
+def max_sum(q, u, istart=None, iend=None):
+    return q + u
+
+
+# if u >= 0
+# max_mul = add_context(mul)
+def max_mul(q, u, istart=None, iend=None):
+    return q * u
+
+
+# max_max = add_context(max)
+def max_max(q, u, istart=None, iend=None):
+    return max(q, u)
+
+
+# max_min = add_context(min)
+def max_min(q, u, istart=None, iend=None):
+    return min(q, u)
 
 
 def maxn_snd(q, u, istart=None, iend=None):
