@@ -2,19 +2,14 @@ from __future__ import annotations
 from math import log2, ceil
 from typing import Callable, TypeVar, Union, Iterable
 import operators
-from operators import ids, transfers, lift, lift_transfer
+from operators import DEFAULT, ids, transfers, lift, lift_transfer
 
-
-DEFAULT = 'default'
-
-class GenericSegmentTree():
+class RangeTree():
 
     Q = TypeVar('Q')
     U = TypeVar('U')
 
-    DEFAULT = 'default'
-
-    def __init__(self: GenericSegmentTree,
+    def __init__(self: RangeTree,
                  arr: Union[Iterable[Q], int],
                  query_plus: Callable[[Q, Q], Q] = operators.sum,
                  update_plus: Callable[[U, U], U] = operators.snd,
@@ -81,7 +76,7 @@ class GenericSegmentTree():
             self.qarr[i] = self.query_plus(self.qarr[i*2], self.qarr[i*2+1])
 
 
-    def push(self: GenericSegmentTree,
+    def push(self: RangeTree,
              i: int,
              istart: int,
              iend: int
@@ -95,7 +90,7 @@ class GenericSegmentTree():
         self.uarr[i] = self.update_id
 
 
-    def update(self: GenericSegmentTree,
+    def update(self: RangeTree,
                start: int,
                end: int,
                value: U
@@ -103,14 +98,14 @@ class GenericSegmentTree():
         self._update(start, end, value, 1, 0, self.N)
 
 
-    def query(self: GenericSegmentTree,
+    def query(self: RangeTree,
               start: int,
               end: int,
               ):
         return self._update(start, end, self.update_id, 1, 0, self.N)
 
 
-    def _update(self: GenericSegmentTree,
+    def _update(self: RangeTree,
                 start: int,
                 end: int,
                 value: U,

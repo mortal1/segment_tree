@@ -81,6 +81,8 @@ ids = {
     inorder: (float("INF"), float("-INF"), True)
 }
 
+DEFAULT = 'default'
+
 
 
 
