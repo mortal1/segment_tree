@@ -2,8 +2,8 @@ from __future__ import annotations
 from copy import copy, deepcopy
 from math import log2, floor
 from typing import Callable, TypeVar, Union, Iterable
-import operators
-from operators import default_ids, default_transfers
+import segment_tree.operators as operators
+from segment_tree.operators import default_ids, default_transfers
 
 # incomplete
 
