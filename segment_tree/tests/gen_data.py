@@ -38,3 +38,39 @@ def save(inputs, filename):
 
 # save(init_large, 'init_large.in')
 
+def test_query_zero(n):
+    print(n, 1)
+    print(' '.join(list(range(5, n+5)))) 
+    print('Q 0 1')
+
+def test_query_n(n):
+    print(n, 1)
+    print(' '.join(list(range(5, n+5)))) 
+    print(f'Q {n-1} {n}')
+
+def test_query_units(n):
+    print(n, n-1)
+    print(' '.join(list(range(5, n+5))))
+    for i in range(n-1):
+        print(f'Q {i} {i+1}')   
+
+def test_query_full(n):
+    print(n, 1)
+    print(' '.join(list(range(5, n+5))))
+    print(f'Q {0} {n}')   
+
+# fails on naive brute forces
+def test_query_fulln(n):
+    print(n, n)
+    print(' '.join(list(range(5, n+5))))
+    for i in range(n):
+        print(f'Q {0} {n}')   
+
+# fails on non-logn range trees
+def test_query_speed(n):
+    print(n, n)
+    print(' '.join(list(range(5, n+5))))
+    for i in range(n):
+        print(f'Q {i//2} {(n+i)//2}')   
+
+
