@@ -7,10 +7,10 @@
 [ ] multiple updators, multipler queries
 [ ] lazy construction
   [x] strict
+[ ] Persistent
 [ ] superlazy updates (updates don't propogate at all until queried)
 [x] Commutative (supports dfs traversal for Offline dynamic connectivity)
   [ ] Non-Commutative
-[ ] Persistent
 [ ] 2-dimensional
 [ ] N-dimensional
 
@@ -69,6 +69,7 @@
     - It's even easier if I care very very little about performance and push every time I enter a node
 - "lift" can be used to turn semigroups into monoids. But lifting transfer operations is much harder. I can define a "kernel" of the transfer (value*interval for a sum-set tree) then it's lift(snd)(q, lift1(kernal)(u, istart, iend))
 - Only Commutative trees deal with the problem of redundant information in a segment, and needing to update both the query and the update values. Since normal trees push frequently, they can just put updates into the update values and let it shift to the query values by the time it's used.
+- A commutative segment tree can solve Offline Dynamic Connectivity (by doing an inorder traversal of the tree). It can also solve mapping neptune since updates are undone, so they access the same nodes as the previous update they are negating.
 - in multidimenionsal segtrees, I need to update every path from the root to the node being upgraded, so that every affected sub/super/overlapping segment can access the information of the update somewhere.
 - a set-query might be useful if the tree only supports querying from the left [0, k]; this would let you query the value of any single square.
 

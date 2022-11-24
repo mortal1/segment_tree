@@ -76,20 +76,6 @@ class RangeTree():
             self.qarr[i] = self.query_plus(self.qarr[i*2], self.qarr[i*2+1])
 
 
-    def push(self: RangeTree,
-             i: int,
-             istart: int,
-             iend: int
-             ):
-        self.qarr[i] = self.transfer(self.qarr[i], self.uarr[i], istart, iend)
-
-        if i < self.N:
-            self.uarr[i*2] = self.update_plus(self.uarr[i*2], self.uarr[i])
-            self.uarr[i*2+1] = self.update_plus(self.uarr[i*2+1], self.uarr[i])
-
-        self.uarr[i] = self.update_id
-
-
     def update(self: RangeTree,
                start: int,
                end: int,
@@ -103,6 +89,20 @@ class RangeTree():
               end: int,
               ):
         return self._update(start, end, self.update_id, 1, 0, self.N)
+
+
+    def push(self: RangeTree,
+             i: int,
+             istart: int,
+             iend: int
+             ):
+        self.qarr[i] = self.transfer(self.qarr[i], self.uarr[i], istart, iend)
+
+        if i < self.N:
+            self.uarr[i*2] = self.update_plus(self.uarr[i*2], self.uarr[i])
+            self.uarr[i*2+1] = self.update_plus(self.uarr[i*2+1], self.uarr[i])
+
+        self.uarr[i] = self.update_id
 
 
     def _update(self: RangeTree,
