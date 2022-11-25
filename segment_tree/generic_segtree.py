@@ -41,7 +41,7 @@ class RangeTree():
 
         if transfer_op is DEFAULT:
             if (query_plus, update_plus) in transfers:
-                transfer_op = transfers[(update_plus, query_plus)]
+                transfer_op = transfers[(query_plus, update_plus)]
             else:
                 raise ValueError
 
