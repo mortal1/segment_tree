@@ -1,19 +1,7 @@
 from misc_segment_trees import SetSumSegmentTree as ST
-import os
+import sys, os
 from glob import glob
-
-def produce(infolder=None, outfolder=None):
-    if infolder is None:
-        infolder = f'{os.path.dirname(__file__)}/tests'
-
-    if outfolder is None:
-        outfolder = f'{os.path.dirname(__file__)}/tmp'
-    
-    for file in glob(infolder):
-        with open(file) as f:
-            pass
-    
-    return
+from contextlib import redirect_stdin, redirect_stdout
 
 
 def runTree(st):
@@ -30,6 +18,21 @@ def runTree(st):
             s, e = map(int, vals)
             print(tree.query(s, e))
 
+
+def produce(st, infolder=None, outfolder=None, tag = ''):
+    if infolder is None:
+        infolder = f'{os.path.dirname(__file__)}/tests'
+
+    if outfolder is None:
+        outfolder = f'{os.path.dirname(__file__)}/tmp'
+    
+    for file in glob(f'{infolder}/*.in'):
+        with open(file) as f:
+            with redirect_stdin(f):
+                runTree(st)
+                pass
+    
+    return
 
 
 def main():
