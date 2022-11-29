@@ -4,6 +4,8 @@ from typing import Callable, TypeVar, Union, Iterable
 import operators
 from operators import DEFAULT, ids, transfers, lift, lift_transfer
 
+# Here, the update and query functions are run by the same _update() function
+
 class RangeTree():
 
     Q = TypeVar('Q')
@@ -76,6 +78,54 @@ class RangeTree():
             self.qarr[i] = self.query_plus(self.qarr[i*2], self.qarr[i*2+1])
 
 
+    def update(self: RangeTree,
+               start: int,
+               end: int,
+               value: U
+               ):
+        self._update(start, end, value, 1, 0, self.N)
+
+
+    def query(self: RangeTree,
+              start: int,
+              end: int,
+              ):
+        return self._update(start, end, self.update_id, 1, 0, self.N)
+
+
+    def _update(self: RangeTree,
+                start: int,
+                end: int,
+                value: U,
+                i: int,
+                istart: int,
+                iend: int
+                ):
+        self.push(i, istart, iend)
+
+        # The query/update range is entirely outside of the segment
+        if end <= istart or start >= iend:
+            return self.query_id  # only queries
+
+        # The query/update range entirely contains the segment
+        elif start <= istart and end >= iend:
+            self.uarr[i] = value  # only updates
+            self.push(i, istart, iend)  # only updates
+
+            return self.qarr[i]  # only queries
+
+        # The segment partially overlaps query/update range
+        # We query/update both children
+        else:
+            imid = (istart + iend) // 2
+            left = self._update(start, end, value, 2*i, istart, imid)
+            right = self._update(start, end, value, 2*i+1, imid, iend)
+            self.qarr[i] = self.query_plus(
+                self.qarr[i*2], self.qarr[i*2+1])  # only updates
+
+            return self.query_plus(left, right)  # only queries
+
+
     def push(self: RangeTree,
              i: int,
              istart: int,
@@ -88,72 +138,3 @@ class RangeTree():
             self.uarr[i*2+1] = self.update_plus(self.uarr[i*2+1], self.uarr[i])
 
         self.uarr[i] = self.update_id
-
-
-    def update(self: RangeTree,
-               start: int,
-               end: int,
-               value: U
-               ):
-        self._update(start, end, value, 1, 0, self.N)
-
-
-    def _update(self: RangeTree,
-                start: int,
-                end: int,
-                value: U,
-                i: int = 1,
-                istart: int = 0,
-                iend: int = self.N
-                ):
-        self.push(i, istart, iend)
-
-        # The update range is entirely outside of the segment
-        if end <= istart or start >= iend:
-            pass
-
-        # The update range entirely contains the segment
-        elif start <= istart and end >= iend:
-            self.uarr[i] = value
-            self.push(i, istart, iend)
-
-        # The segment partially overlaps update range
-        # We update both children
-        else:
-            imid = (istart + iend) // 2
-            self._update(start, end, value, 2*i, istart, imid)
-            self._update(start, end, value, 2*i+1, imid, iend)
-            self.qarr[i] = self.query_plus(self.qarr[i*2], self.qarr[i*2+1])
-
-
-    def query(self: RangeTree,
-              start: int,
-              end: int,
-              ):
-        return self._query(start, end, 1, 0, self.N)
-
-
-    def _query(self: RangeTree,
-                start: int,
-                end: int,
-                i: int,
-                istart: int,
-                iend: int
-                ):
-        self.push(i, istart, iend)
-
-        # The query range is entirely outside of the segment
-        if end <= istart or start >= iend:
-            return self.query_id
-
-        # The query range entirely contains the segment
-        elif start <= istart and end >= iend:
-            return self.qarr[i]
-
-        # The segment partially overlaps query range
-        # We query both children
-        else:
-            imid = (istart + iend) // 2
-            left = self._query(start, end, 2*i, istart, imid)
-            right = self._query(start, end, 2*i+1, imid, iend)
-            return self.query_plus(left, right)
