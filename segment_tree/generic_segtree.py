@@ -102,9 +102,9 @@ class RangeTree():
                 start: int,
                 end: int,
                 value: U,
-                i: int = 1,
-                istart: int = 0,
-                iend: int = self.N
+                i: int,
+                istart: int,
+                iend: int
                 ):
         self.push(i, istart, iend)
 
